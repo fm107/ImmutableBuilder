@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ImmutableBuilder
 {
@@ -32,11 +33,22 @@ namespace ImmutableBuilder
 
     public class SingleDestinationBuilder: BuilderBase
     {
-        private string _singleDestination;
+        private string _destination;
 
         public SingleDestinationBuilder WithDestination(string destination)
         {
             throw new NotImplementedException();
+        }
+
+        protected override IEnumerable<KeyValuePair<string, string>> EnumerateEntries()
+        {
+            var baseEntries = base.EnumerateEntries();
+            foreach (var baseEntry in baseEntries)
+            {
+                yield return baseEntry;
+            }
+
+            yield return KeyValuePair.Create<string, string>("Destination", _destination);
         }
     }
 
@@ -47,6 +59,17 @@ namespace ImmutableBuilder
         public MultipleDestinationBuilder WithDestinations(params string[] destinations)
         {
             throw new NotImplementedException();
+        }
+
+        protected override IEnumerable<KeyValuePair<string, string>> EnumerateEntries()
+        {
+            var baseEntries = base.EnumerateEntries();
+            foreach (var baseEntry in baseEntries)
+            {
+                yield return baseEntry;
+            }
+
+            yield return KeyValuePair.Create<string, string>("Destinations", string.Join(";", _destinations));
         }
     }
 
@@ -59,9 +82,15 @@ namespace ImmutableBuilder
             throw new NotImplementedException();
         }
 
+        protected virtual IEnumerable<KeyValuePair<string, string>> EnumerateEntries()
+        {
+            yield return KeyValuePair.Create<string, string>("Source", _source);
+        }
+
         public IReadOnlyDictionary<string, string> Build()
         {
-            throw new NotImplementedException();
+            var entries = EnumerateEntries();
+            return new Dictionary<string, string>(entries);
         }
     }
 }
