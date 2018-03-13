@@ -48,7 +48,7 @@ namespace ImmutableBuilder
                 yield return baseEntry;
             }
 
-            yield return KeyValuePair.Create<string, string>("Destination", _destination);
+            yield return KeyValuePair.Create("Destination", _destination);
         }
     }
 
@@ -69,7 +69,7 @@ namespace ImmutableBuilder
                 yield return baseEntry;
             }
 
-            yield return KeyValuePair.Create<string, string>("Destinations", string.Join(";", _destinations));
+            yield return KeyValuePair.Create("Destinations", string.Join(";", _destinations));
         }
     }
 
@@ -84,7 +84,7 @@ namespace ImmutableBuilder
 
         protected virtual IEnumerable<KeyValuePair<string, string>> EnumerateEntries()
         {
-            yield return KeyValuePair.Create<string, string>("Source", _source);
+            yield return KeyValuePair.Create("Source", _source);
         }
 
         public IReadOnlyDictionary<string, string> Build()
