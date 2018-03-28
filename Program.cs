@@ -31,13 +31,21 @@ namespace ImmutableBuilder
         }
     }
 
-    public class SingleDestinationBuilder: BuilderBase
+    public class SingleDestinationBuilder: BuilderBase<SingleDestinationBuilder>
     {
         private string _destination;
 
         public SingleDestinationBuilder WithDestination(string destination)
         {
-            throw new NotImplementedException();
+            var instance = CreateInstance();
+            instance._destination = destination;
+
+            return instance;
+        }
+
+        protected override SingleDestinationBuilder CreateInstance()
+        {
+            return new SingleDestinationBuilder();
         }
 
         protected override IEnumerable<KeyValuePair<string, string>> EnumerateEntries()
@@ -52,13 +60,21 @@ namespace ImmutableBuilder
         }
     }
 
-    public class MultipleDestinationBuilder: BuilderBase
+    public class MultipleDestinationBuilder: BuilderBase<MultipleDestinationBuilder>
     {
         private IReadOnlyCollection<string> _destinations;
 
         public MultipleDestinationBuilder WithDestinations(params string[] destinations)
         {
-            throw new NotImplementedException();
+            var instance = CreateInstance();
+            instance._destinations = destinations;
+
+            return instance;
+        }
+
+        protected override MultipleDestinationBuilder CreateInstance()
+        {
+            return new MultipleDestinationBuilder();
         }
 
         protected override IEnumerable<KeyValuePair<string, string>> EnumerateEntries()
@@ -73,14 +89,19 @@ namespace ImmutableBuilder
         }
     }
 
-    public abstract class BuilderBase
+    public abstract class BuilderBase<T> where T : BuilderBase<T>
     {
         private string _source;
 
-        public BuilderBase WithSource(string source)
+        public T WithSource(string source)
         {
-            throw new NotImplementedException();
+            var instance = CreateInstance();
+            instance._source = source;
+
+            return instance;
         }
+
+        protected abstract T CreateInstance();
 
         protected virtual IEnumerable<KeyValuePair<string, string>> EnumerateEntries()
         {
@@ -93,4 +114,4 @@ namespace ImmutableBuilder
             return new Dictionary<string, string>(entries);
         }
     }
-}
+ }
